@@ -10,7 +10,7 @@ interface AuthContextType {
   session: Session | null
   railwayUser: RailwayUser | null
   member: Member | null
-  login: (email: string, password: string) => Promise<{ error: any }>
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<{ error: any }>
   logout: () => Promise<void>
   isLoading: boolean
 }
@@ -184,7 +184,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, rememberMe: boolean = false) => {
     // Clear cache before new login (user might be different)
     clearAuthState()
     
@@ -192,6 +192,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       email,
       password,
     })
+    
+    // If remember me is checked, save credentials
+    if (rememberMe && !error) {
+      // Save remember me preference and email
+      localStorage.setItem('rememberMe', 'true')
+      localStorage.setItem('savedEmail', email)
+      // Save encrypted password
+      const encryptedPassword = btoa(password) // Simple base64 encoding for demo
+      localStorage.setItem('savedPassword', encryptedPassword)
+    } else if (!rememberMe) {
+      // Remove remember me setting and saved credentials
+      localStorage.removeItem('rememberMe')
+      localStorage.removeItem('savedEmail')
+      localStorage.removeItem('savedPassword')
+    }
     return { error }
   }
 

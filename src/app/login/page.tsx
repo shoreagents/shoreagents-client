@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff} from "lucide-react"
 import Link from "next/link"
 import { useAuth } from "@/contexts/auth-context"
@@ -12,19 +13,41 @@ import { useMemo } from "react"
 import { supabase } from "@/lib/supabase"
 import { WorldMap } from "@/components/ui/world-map";
 import { motion } from "motion/react";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
+  const [rememberMe, setRememberMe] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { login } = useAuth()
   const router = useRouter()
 
+  // Load saved credentials on component mount
+  useEffect(() => {
+    const savedRememberMe = localStorage.getItem('rememberMe')
+    if (savedRememberMe === 'true') {
+      setRememberMe(true)
+      // Load saved email
+      const savedEmail = localStorage.getItem('savedEmail')
+      if (savedEmail) setEmail(savedEmail)
+      // Load saved password
+      const savedPassword = localStorage.getItem('savedPassword')
+      if (savedPassword) {
+        try {
+          const decryptedPassword = atob(savedPassword) // Decode base64
+          setPassword(decryptedPassword)
+        } catch (error) {
+          console.warn('Failed to load saved password:', error)
+          localStorage.removeItem('savedPassword')
+        }
+      }
+    }
+  }, [])
+
   const [showForgot, setShowForgot] = useState(false)
   const [forgotEmail, setForgotEmail] = useState("")
-  const [forgotStatus, setForgotStatus] = useState<{ success?: string; error?: string }>({})
   const [isForgotSubmitting, setIsForgotSubmitting] = useState(false)
   
   // Track which testimonial cards should be visible based on path completion
@@ -73,31 +96,30 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError("")
     setIsSubmitting(true)
     
     try {
-      const { error } = await login(email, password)
+      const { error } = await login(email, password, rememberMe)
       if (error) {
         // Check if it's a client access error
         if (error.message?.includes('Access denied') || error.message?.includes('Only clients can log in')) {
-          setError("Access denied. Only clients can log in to this application.")
+          toast.error("Access denied. Only clients can log in to this application.")
         } else {
-          setError(error.message || "Invalid email or password")
+          toast.error(error.message || "Invalid email or password")
         }
+        setIsSubmitting(false)
       } else {
+        // Keep loading state during redirect
         router.push("/")
       }
     } catch (error) {
-      setError("An unexpected error occurred")
-    } finally {
+      toast.error("An unexpected error occurred")
       setIsSubmitting(false)
     }
   }
 
   const handleForgotSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setForgotStatus({})
     setIsForgotSubmitting(true)
     
     try {
@@ -106,12 +128,12 @@ export default function LoginPage() {
       })
       
       if (error) {
-        setForgotStatus({ error: error.message })
+        toast.error(error.message)
       } else {
-        setForgotStatus({ success: "If this email exists, a reset link has been sent." })
+        toast.success("If this email exists, a reset link has been sent.")
       }
     } catch (error) {
-      setForgotStatus({ error: "An unexpected error occurred" })
+      toast.error("An unexpected error occurred")
     } finally {
       setIsForgotSubmitting(false)
     }
@@ -377,11 +399,6 @@ export default function LoginPage() {
           {!showForgot ? (
             <>
               <form onSubmit={handleSubmit} className="space-y-4">
-                {error && (
-                  <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-                    {error}
-                  </div>
-                )}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -420,6 +437,19 @@ export default function LoginPage() {
                     </Button>
                   </div>
                 </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="remember-me"
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                  />
+                  <Label
+                    htmlFor="remember-me"
+                    className="text-sm font-normal cursor-pointer"
+                  >
+                    Remember me
+                  </Label>
+                </div>
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
                   {isSubmitting ? "Signing in..." : "Sign In"}
                 </Button>
@@ -437,16 +467,6 @@ export default function LoginPage() {
           ) : (
             <>
               <form onSubmit={handleForgotSubmit} className="space-y-4">
-                {forgotStatus.error && (
-                  <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-                    {forgotStatus.error}
-                  </div>
-                )}
-                {forgotStatus.success && (
-                  <div className="p-3 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md">
-                    {forgotStatus.success}
-                  </div>
-                )}
                 <div className="space-y-2">
                   <Label htmlFor="forgot-email">Email</Label>
                   <Input
