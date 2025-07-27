@@ -14,9 +14,12 @@ import {
   HelpCircleIcon,
   LayoutDashboardIcon,
   ListIcon,
+  MapPinIcon,
   SearchIcon,
   SettingsIcon,
   UsersIcon,
+  BuildingIcon,
+  ClockIcon,
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -54,6 +57,23 @@ const data = {
       title: "Employees",
       url: "/employees",
       icon: UsersIcon,
+    },
+    {
+      title: "Departments",
+      url: "#",
+      icon: BuildingIcon,
+    },
+  ],
+  navTracker: [
+    {
+      title: "Stations",
+      url: "/stations",
+      icon: MapPinIcon,
+    },
+    {
+      title: "Attendance",
+      url: "#",
+      icon: ClockIcon,
     },
   ],
   navSecondary: [
@@ -186,6 +206,42 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent className="flex flex-col gap-1">
             <SidebarMenu>
               {data.navTeam.map((item) => {
+                const active = isActive(item.url)
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      tooltip={item.title}
+                      style={{
+                        backgroundColor: active ? '#f3f4f6' : undefined,
+                        color: active ? '#374151' : undefined,
+                      }}
+                      className={`transition-colors duration-200 h-8 px-2 ${
+                        active
+                          ? ""
+                          : "text-sidebar-foreground hover:bg-accent hover:text-accent-foreground"
+                      }`}
+                    >
+                      <Link href={item.url}>
+                        {item.icon && <item.icon className="h-4 w-4" />}
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Tracker Navigation */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="px-2 py-1 text-xs font-medium text-muted-foreground">
+            Tracker
+          </SidebarGroupLabel>
+          <SidebarGroupContent className="flex flex-col gap-1">
+            <SidebarMenu>
+              {data.navTracker.map((item) => {
                 const active = isActive(item.url)
                 return (
                   <SidebarMenuItem key={item.title}>

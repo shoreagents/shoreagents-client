@@ -18,6 +18,8 @@ export function SiteHeader() {
         return "Dashboard"
       case "/employees":
         return "Employees"
+      case "/stations":
+        return "Stations"
       default:
         // For any other paths, try to extract a meaningful title
         if (normalizedPathname.startsWith("/employees")) {
@@ -25,6 +27,9 @@ export function SiteHeader() {
         }
         if (normalizedPathname.startsWith("/dashboard")) {
           return "Dashboard"
+        }
+        if (normalizedPathname.startsWith("/stations")) {
+          return "Stations"
         }
         return "Dashboard" // Default to Dashboard instead of Documents
     }

@@ -218,19 +218,17 @@ export default function EmployeesPage() {
           <SiteHeader />
           <div className="flex flex-1 flex-col">
             <div className="@container/main flex flex-1 flex-col gap-2">
-              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+              <div className="flex flex-col gap-2 py-2 md:gap-3 md:py-3">
                 {/* Header Skeleton */}
-                <div className="px-4 lg:px-6">
-                  <div className="flex flex-col gap-4">
+                <div className="px-2 lg:px-4">
+                  <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
-                      <div className="space-y-2">
-                        <Skeleton className="h-8 w-32" />
-                        <Skeleton className="h-4 w-64" />
+                      <div>
                       </div>
                     </div>
 
                     {/* Search and Filters Skeleton */}
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <Skeleton className="h-9 w-64" />
                       <Skeleton className="h-9 w-48" />
                     </div>
@@ -238,7 +236,7 @@ export default function EmployeesPage() {
                 </div>
 
                 {/* Table Skeleton */}
-                <div className="px-4 lg:px-6">
+                <div className="px-2 lg:px-4">
                   <div className="rounded-lg border">
                     <Table>
                       <TableHeader>
@@ -281,8 +279,8 @@ export default function EmployeesPage() {
           <SiteHeader />
           <div className="flex flex-1 flex-col">
             <div className="@container/main flex flex-1 flex-col gap-2">
-              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-                <div className="flex items-center justify-center h-64">
+              <div className="flex flex-col gap-2 py-2 md:gap-3 md:py-3">
+                <div className="flex items-center justify-center h-32">
                   <div className="text-center">
                     <div className="text-red-600 mb-2">Error loading employees</div>
                     <Button onClick={() => window.location.reload()}>
@@ -306,21 +304,17 @@ export default function EmployeesPage() {
           <SiteHeader />
           <div className="flex flex-1 flex-col overflow-hidden">
             <div className="@container/main flex flex-1 flex-col gap-2">
-              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+              <div className="flex flex-col gap-2 py-2 md:gap-3 md:py-3">
                 {/* Header */}
-                <div className="px-4 lg:px-6">
-                  <div className="flex flex-col gap-4">
+                <div className="px-2 lg:px-4">
+                  <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Employees</h1>
-                        <p className="text-muted-foreground">
-                          View your team members and their information
-                        </p>
                       </div>
                     </div>
 
                     {/* Search and Filters */}
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div className="relative flex-1 max-w-sm">
                         <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
@@ -350,7 +344,7 @@ export default function EmployeesPage() {
                 </div>
 
                 {/* Employees Table */}
-                <div className="px-4 lg:px-6">
+                <div className="px-2 lg:px-4">
                   <div className="rounded-lg border">
                     <Table>
                       <TableHeader>
@@ -403,7 +397,7 @@ export default function EmployeesPage() {
                   </div>
 
                   {/* Pagination */}
-                  <div className="flex items-center justify-between px-4 py-4">
+                  <div className="flex items-center justify-between px-2 py-2">
                     <div className="flex-1 text-sm text-muted-foreground">
                       {table.getFilteredSelectedRowModel().rows.length} of{" "}
                       {table.getFilteredRowModel().rows.length} row(s) selected.
