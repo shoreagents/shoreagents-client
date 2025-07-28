@@ -106,4 +106,58 @@ export class RailwayService {
       return []
     }
   }
+
+  // Get attendance records
+  static async getAttendance(email: string, filters?: {
+    date?: string
+    status?: string
+    department?: string
+  }): Promise<{ attendance: any[], stats: any }> {
+    try {
+      const params = new URLSearchParams({ email })
+      if (filters?.date) params.append('date', filters.date)
+      if (filters?.status) params.append('status', filters.status)
+      if (filters?.department) params.append('department', filters.department)
+
+      const response = await fetch(`/api/attendance?${params.toString()}`)
+      const data = await response.json()
+      
+      if (response.ok) {
+        return { attendance: data.attendance || [], stats: data.stats || {} }
+      }
+      return { attendance: [], stats: {} }
+    } catch (error) {
+      console.error('Error fetching attendance:', error)
+      return { attendance: [], stats: {} }
+    }
+  }
+
+  // Create attendance record
+  static async createAttendanceRecord(record: {
+    employee_id: number
+    date: string
+    check_in_time?: string
+    check_out_time?: string
+    status?: string
+    notes?: string
+  }): Promise<any> {
+    try {
+      const response = await fetch('/api/attendance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(record),
+      })
+      const data = await response.json()
+      
+      if (response.ok) {
+        return data.attendance
+      }
+      throw new Error(data.error || 'Failed to create attendance record')
+    } catch (error) {
+      console.error('Error creating attendance record:', error)
+      throw error
+    }
+  }
 } 
