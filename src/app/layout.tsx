@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Analytics Dashboard",
+  title: "ShoreAgents Client",
   description: "A modern analytics dashboard built with Next.js and shadcn/ui",
 };
 

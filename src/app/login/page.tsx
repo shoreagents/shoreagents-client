@@ -141,14 +141,8 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Side - World Map */}
-      <div className="hidden lg:flex lg:w-[63%] bg-[rgb(8,8,8)] flex-col justify-between p-8">
-        <div className="flex items-center">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center mr-3">
-            <span className="text-primary-foreground font-bold text-lg">A</span>
-          </div>
-          <span className="text-xl font-semibold text-white">Analytics Inc</span>
-        </div>
+             {/* Left Side - World Map */}
+       <div className="hidden lg:flex lg:w-[63%] bg-[rgb(8,8,8)] flex-col justify-between p-8">
         
         <div className="flex-1 flex items-center justify-center px-4 relative">
           <div className="w-full">
@@ -208,22 +202,22 @@ export default function LoginPage() {
                 onAnimationComplete={() => setCardBlurDone(prev => { const arr = [...prev]; arr[0] = true; return arr; })}
               >
                 <div
-                  className="testimonial-card bg-white/5 backdrop-blur-sm border border-white/30 rounded-lg p-2 w-[260px] flex flex-col justify-center text-white"
+                  className="testimonial-card bg-white/5 backdrop-blur-sm border border-white/30 rounded-lg p-2 w-[320px] flex flex-col justify-center text-white"
                 >
-                  <p className="text-[11px] font-medium">"We've used multiple Outsourcing companies and ShoreAgents has surpassed our expectations by far."</p>
-                  <div className="flex items-center mt-2">
-                    <div className="w-6 h-6 min-w-6 min-h-6 rounded-full mr-2 flex-shrink-0 overflow-hidden">
-                      <img 
-                        src="/images/testimonials/Kuahiwi-Kahapea.webp" 
-                        alt="Kuahiwi Kahapea" 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-gray-300 font-semibold">Kuahiwi Kahapea</p>
-                      <p className="text-[9px] text-gray-400 -mt-0.5">Ballast, United States</p>
-                    </div>
-                  </div>
+                                                                                                                                                       <p className="text-xs font-medium leading-relaxed">"We've used multiple Outsourcing companies and ShoreAgents has surpassed our expectations by far."</p>
+                     <div className="flex items-center mt-3">
+                                            <div className="w-6 h-6 min-w-6 min-h-6 rounded-full mr-2 flex-shrink-0 overflow-hidden">
+                                                  <img 
+                             src="https://sanljwkkoawwdpaxrper.supabase.co/storage/v1/object/public/floor-plans/public/testimonials/Kuahiwi-Kahape.webp" 
+                             alt="Kuahiwi Kahapea" 
+                             className="w-full h-full object-cover"
+                           />
+                        </div>
+                       <div>
+                         <p className="text-xs text-gray-300 font-semibold">Kuahiwi Kahapea</p>
+                         <p className="text-xs text-gray-400 -mt-0.5">Ballast, United States</p>
+                       </div>
+                     </div>
                 </div>
               </motion.div>
               {/* Canada Connection */}
@@ -256,22 +250,22 @@ export default function LoginPage() {
                 onAnimationComplete={() => setCardBlurDone(prev => { const arr = [...prev]; arr[1] = true; return arr; })}
               >
                 <div
-                  className="testimonial-card bg-white/5 backdrop-blur-sm border border-white/30 rounded-lg p-2 w-[260px] flex flex-col justify-center text-white"
+                  className="testimonial-card bg-white/5 backdrop-blur-sm border border-white/30 rounded-lg p-2 w-[320px] flex flex-col justify-center text-white"
                 >
-                  <p className="text-[11px] font-medium">"Their systems and real estate industry experience set them apart from the rest. Plus recent advances in new technology and AI make things even better."</p>
-                  <div className="flex items-center mt-2">
-                    <div className="w-6 h-6 min-w-6 min-h-6 rounded-full mr-2 flex-shrink-0 overflow-hidden">
-                      <img 
-                        src="/images/testimonials/Ray-Wood.webp" 
-                        alt="Ray Wood" 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-gray-300 font-semibold">Ray Wood</p>
-                      <p className="text-[9px] text-gray-400 -mt-0.5">Bestagents Group, Canada</p>
-                    </div>
-                  </div>
+                                                                                                                                                       <p className="text-xs font-medium leading-relaxed">"Their systems and real estate industry experience set them apart from the rest. Plus recent advances in new technology and AI make things even better."</p>
+                     <div className="flex items-center mt-3">
+                                            <div className="w-6 h-6 min-w-6 min-h-6 rounded-full mr-2 flex-shrink-0 overflow-hidden">
+                        <img 
+                          src="https://sanljwkkoawwdpaxrper.supabase.co/storage/v1/object/public/floor-plans/public/testimonials/Ray-Wood.webp" 
+                          alt="Ray Wood" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                     <div>
+                       <p className="text-xs text-gray-300 font-semibold">Ray Wood</p>
+                       <p className="text-xs text-gray-400 -mt-0.5">Bestagents Group, Canada</p>
+                     </div>
+                   </div>
                 </div>
               </motion.div>
               {/* Australia Connection */}
@@ -304,22 +298,22 @@ export default function LoginPage() {
                 onAnimationComplete={() => setCardBlurDone(prev => { const arr = [...prev]; arr[2] = true; return arr; })}
               >
                 <div
-                  className="testimonial-card bg-white/5 backdrop-blur-sm border border-white/30 rounded-lg p-2 w-[260px] flex flex-col justify-center text-white"
+                  className="testimonial-card bg-white/5 backdrop-blur-sm border border-white/30 rounded-lg p-2 w-[320px] flex flex-col justify-center text-white"
                 >
-                  <p className="text-[11px] font-medium">"Outsourcing really allowed me to streamline what I do, particularly with my back office out of things which takes a lot of time off me, and allows me to focus on the role that I need."</p>
-                  <div className="flex items-center mt-2">
-                    <div className="w-6 h-6 min-w-6 min-h-6 rounded-full mr-2 flex-shrink-0 overflow-hidden">
-                      <img 
-                        src="/images/testimonials/Jason-Gard.webp" 
-                        alt="Jason Gard" 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-gray-300 font-semibold">Jason Gard</p>
-                      <p className="text-[9px] text-gray-400 -mt-0.5">Jason Gard Real Estate, Australia</p>
-                    </div>
-                  </div>
+                                                                                                                                                       <p className="text-xs font-medium leading-relaxed">"Outsourcing really allowed me to streamline what I do, particularly with my back office out of things which takes a lot of time off me, and allows me to focus on the role that I need."</p>
+                     <div className="flex items-center mt-3">
+                                            <div className="w-6 h-6 min-w-6 min-h-6 rounded-full mr-2 flex-shrink-0 overflow-hidden">
+                        <img 
+                          src="https://sanljwkkoawwdpaxrper.supabase.co/storage/v1/object/public/floor-plans/public/testimonials/Jason-Gard.webp" 
+                          alt="Jason Gard" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                     <div>
+                       <p className="text-xs text-gray-300 font-semibold">Jason Gard</p>
+                       <p className="text-xs text-gray-400 -mt-0.5">Jason Gard Real Estate, Australia</p>
+                     </div>
+                   </div>
                 </div>
               </motion.div>
               {/* New Zealand Connection */}
@@ -352,22 +346,22 @@ export default function LoginPage() {
                 onAnimationComplete={() => setCardBlurDone(prev => { const arr = [...prev]; arr[3] = true; return arr; })}
               >
                 <div
-                  className="testimonial-card bg-white/5 backdrop-blur-sm border border-white/30 rounded-lg p-2 w-[260px] flex flex-col justify-center text-white"
+                  className="testimonial-card bg-white/5 backdrop-blur-sm border border-white/30 rounded-lg p-2 w-[320px] flex flex-col justify-center text-white"
                 >
-                  <p className="text-[11px] font-medium">"We are extremely happy with the service and will be using them for other companies in our network."</p>
-                  <div className="flex items-center mt-2">
-                    <div className="w-6 h-6 min-w-6 min-h-6 rounded-full mr-2 flex-shrink-0 overflow-hidden">
-                      <img 
-                        src="/images/testimonials/Pernell-Callaghan.webp" 
-                        alt="Pernell Callaghan" 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-gray-300 font-semibold">Pernell Callaghan</p>
-                      <p className="text-[9px] text-gray-400 -mt-0.5">Arizto Real Estate, New Zealand</p>
-                    </div>
-                  </div>
+                                                                                                                                                       <p className="text-xs font-medium leading-relaxed">"We are extremely happy with the service and will be using them for other companies in our network."</p>
+                     <div className="flex items-center mt-3">
+                                            <div className="w-6 h-6 min-w-6 min-h-6 rounded-full mr-2 flex-shrink-0 overflow-hidden">
+                        <img 
+                          src="https://sanljwkkoawwdpaxrper.supabase.co/storage/v1/object/public/floor-plans/public/testimonials/Pernell-Callaghan.webp" 
+                          alt="Pernell Callaghan" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                     <div>
+                       <p className="text-xs text-gray-300 font-semibold">Pernell Callaghan</p>
+                       <p className="text-xs text-gray-400 -mt-0.5">Arizto Real Estate, New Zealand</p>
+                     </div>
+                   </div>
                 </div>
               </motion.div>
             </div>
@@ -385,13 +379,13 @@ export default function LoginPage() {
           <div className="text-center mb-8">
             {!showForgot ? (
               <>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome back</h1>
-                <p className="text-gray-600">Enter your email below to sign in to your account.</p>
+                                 <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome</h1>
+                 <p className="text-sm text-gray-600">Enter your email below to sign in to your account.</p>
               </>
             ) : (
               <>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">Forgot your password?</h1>
-                <p className="text-gray-600">Enter your email to receive a password reset link.</p>
+                                 <h1 className="text-2xl font-bold text-gray-900 mb-2">Forgot your password?</h1>
+                 <p className="text-sm text-gray-600">Enter your email to receive a password reset link.</p>
               </>
             )}
           </div>
@@ -400,7 +394,7 @@ export default function LoginPage() {
             <>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                                     <Label htmlFor="email" className="text-sm">Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -411,7 +405,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                                     <Label htmlFor="password" className="text-sm">Password</Label>
                   <div className="relative">
                     <Input
                       id="password"
@@ -443,32 +437,32 @@ export default function LoginPage() {
                     checked={rememberMe}
                     onCheckedChange={(checked) => setRememberMe(checked as boolean)}
                   />
-                  <Label
-                    htmlFor="remember-me"
-                    className="text-sm font-normal cursor-pointer"
-                  >
-                    Remember me
-                  </Label>
+                                     <Label
+                     htmlFor="remember-me"
+                     className="text-sm font-normal cursor-pointer"
+                   >
+                     Remember me
+                   </Label>
                 </div>
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
                   {isSubmitting ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
-              <div className="mt-6 text-center text-sm text-gray-600">
-                <button
-                  type="button"
-                  className="text-blue-600 hover:text-blue-500 underline"
-                  onClick={() => setShowForgot(true)}
-                >
-                  Forgot your password?
-                </button>
-              </div>
+                             <div className="mt-6 text-center text-sm text-gray-600">
+                 <button
+                   type="button"
+                   className="text-blue-600 hover:text-blue-500 underline"
+                   onClick={() => setShowForgot(true)}
+                 >
+                   Forgot your password?
+                 </button>
+               </div>
             </>
           ) : (
             <>
               <form onSubmit={handleForgotSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="forgot-email">Email</Label>
+                                 <div className="space-y-2">
+                   <Label htmlFor="forgot-email" className="text-sm">Email</Label>
                   <Input
                     id="forgot-email"
                     type="email"
@@ -482,15 +476,15 @@ export default function LoginPage() {
                   {isForgotSubmitting ? "Sending..." : "Send reset link"}
                 </Button>
               </form>
-              <div className="mt-6 text-center text-sm text-gray-600">
-                <button
-                  type="button"
-                  className="text-blue-600 hover:text-blue-500 underline"
-                  onClick={() => setShowForgot(false)}
-                >
-                  Back to login
-                </button>
-              </div>
+                             <div className="mt-6 text-center text-sm text-gray-600">
+                 <button
+                   type="button"
+                   className="text-blue-600 hover:text-blue-500 underline"
+                   onClick={() => setShowForgot(false)}
+                 >
+                   Back to login
+                 </button>
+               </div>
             </>
           )}
         </div>

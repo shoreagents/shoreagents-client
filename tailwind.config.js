@@ -71,7 +71,8 @@ module.exports = {
   				'system-ui',
   				'sans-serif'
   			]
-  		}
+  		},
+
   	}
   },
   plugins: [require("tailwindcss-animate")],
