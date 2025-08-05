@@ -204,6 +204,11 @@ export default function EmployeesPage() {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onGlobalFilterChange: setGlobalFilter,
+    initialState: {
+      pagination: {
+        pageSize: 20,
+      },
+    },
     state: {
       sorting,
       globalFilter,

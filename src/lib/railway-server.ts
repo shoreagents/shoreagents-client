@@ -317,4 +317,74 @@ export class RailwayServerService {
       return []
     }
   }
+
+  // Get break sessions for current user's member
+  static async getBreakSessionsForCurrentUser(userId: number): Promise<any[]> {
+    try {
+      console.log('Getting break sessions for user_id:', userId)
+      
+      // First get the user's member_id
+      let memberId = null
+      
+      // Check if user is a client
+      const clientQuery = 'SELECT member_id FROM clients WHERE user_id = $1'
+      const clientResult = await pool.query(clientQuery, [userId])
+      
+      if (clientResult.rows.length > 0) {
+        memberId = clientResult.rows[0].member_id
+        console.log('Found member_id from clients table:', memberId)
+      } else {
+        // Check if user is an agent
+        const agentQuery = 'SELECT member_id FROM agents WHERE user_id = $1'
+        const agentResult = await pool.query(agentQuery, [userId])
+        
+        if (agentResult.rows.length > 0) {
+          memberId = agentResult.rows[0].member_id
+          console.log('Found member_id from agents table:', memberId)
+        }
+      }
+      
+      if (!memberId) {
+        console.log('No member_id found for user:', userId)
+        return []
+      }
+      
+      // Get break sessions for agents in this member
+      const query = `
+        SELECT 
+          bs.id,
+          bs.agent_user_id,
+          bs.break_type,
+          bs.start_time,
+          bs.end_time,
+          bs.duration_minutes,
+          bs.pause_time,
+          bs.resume_time,
+          bs.pause_used,
+          bs.time_remaining_at_pause,
+          bs.break_date,
+          bs.created_at,
+          u.email,
+          pi.first_name,
+          pi.last_name,
+          COALESCE(pi.first_name, '') || ' ' || COALESCE(pi.last_name, '') as full_name
+        FROM break_sessions bs
+        JOIN agents a ON bs.agent_user_id = a.user_id
+        JOIN users u ON bs.agent_user_id = u.id
+        LEFT JOIN personal_info pi ON u.id = pi.user_id
+        WHERE a.member_id = $1
+        AND bs.break_date = CURRENT_DATE
+        AND bs.end_time IS NULL
+        ORDER BY bs.start_time DESC
+      `
+      
+      console.log('Fetching break sessions for member_id:', memberId)
+      const result = await pool.query(query, [memberId])
+      console.log('Found break sessions:', result.rows.length)
+      return result.rows
+    } catch (error) {
+      console.error('Error fetching break sessions:', error)
+      return []
+    }
+  }
 } 

@@ -82,58 +82,33 @@ body {
   font-family: inherit;
 }
 
-/* Custom float animations for testimonials - optimized for backdrop blur */
-@keyframes float {
-  0%, 100% {
-    transform: translate3d(0, 0px, 0);
-  }
-  50% {
-    transform: translate3d(0, -8px, 0);
-  }
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
 }
 
-@keyframes floatSlow {
-  0%, 100% {
-    transform: translate3d(0px, 0px, 0);
-  }
-  25% {
-    transform: translate3d(1px, -6px, 0);
-  }
-  75% {
-    transform: translate3d(-1px, -3px, 0);
-  }
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-@keyframes floatWave {
-  0%, 100% {
-    transform: translate3d(0px, 0px, 0);
-  }
-  33% {
-    transform: translate3d(2px, -8px, 0);
-  }
-  66% {
-    transform: translate3d(-1px, -5px, 0);
-  }
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
 }
 
-@keyframes floatGentle {
-  0%, 100% {
-    transform: translate3d(0px, 0px, 0);
-  }
-  40% {
-    transform: translate3d(1px, -5px, 0);
-  }
-  80% {
-    transform: translate3d(-1px, -6px, 0);
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
 }
 
-/* Optimized testimonial styles for smooth backdrop blur */
-.testimonial-card {
-  will-change: transform;
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
-  -webkit-transform-style: preserve-3d;
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
 }
 
 @theme inline {
