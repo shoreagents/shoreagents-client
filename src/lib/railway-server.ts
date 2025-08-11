@@ -106,7 +106,7 @@ export class RailwayServerService {
     }
   }
 
-  // Get user by email
+  // Get user by email (global - use with caution)
   static async getUserByEmail(email: string): Promise<User | null> {
     try {
       const query = 'SELECT * FROM users WHERE email = $1'
@@ -204,6 +204,7 @@ export class RailwayServerService {
   static async getEmployeesByMemberId(memberId: number): Promise<any[]> {
     try {
       // Get only agents for this member with their personal and job info
+      // Fixed JOIN order and relationships based on DDL
       const query = `
         SELECT 
           u.id,
@@ -230,12 +231,13 @@ export class RailwayServerService {
           ji.staff_source,
           ji.start_date,
           ji.exit_date,
+          ji.work_email,
           d.name as department_name,
           d.description as department_description
         FROM users u
+        INNER JOIN agents a ON u.id = a.user_id
         LEFT JOIN personal_info pi ON u.id = pi.user_id
-        LEFT JOIN job_info ji ON u.id = ji.agent_user_id
-        LEFT JOIN agents a ON u.id = a.user_id
+        LEFT JOIN job_info ji ON a.user_id = ji.agent_user_id
         LEFT JOIN departments d ON a.department_id = d.id
         WHERE a.member_id = $1
         AND u.user_type = 'Agent'
@@ -374,7 +376,6 @@ export class RailwayServerService {
         LEFT JOIN personal_info pi ON u.id = pi.user_id
         WHERE a.member_id = $1
         AND bs.break_date = CURRENT_DATE
-        AND bs.end_time IS NULL
         ORDER BY bs.start_time DESC
       `
       
@@ -384,6 +385,117 @@ export class RailwayServerService {
       return result.rows
     } catch (error) {
       console.error('Error fetching break sessions:', error)
+      return []
+    }
+  }
+
+  // Get Railway user ID from Supabase user metadata (most efficient)
+  static async getRailwayUserIdFromSupabase(supabaseUserId: string): Promise<number | null> {
+    try {
+      console.log('Getting Railway user ID for Supabase user:', supabaseUserId)
+      
+      // Query to get Railway user ID by Supabase user ID
+      const query = 'SELECT id FROM users WHERE supabase_user_id = $1'
+      const result = await pool.query(query, [supabaseUserId])
+      
+      if (result.rows.length > 0) {
+        const railwayUserId = result.rows[0].id
+        console.log('Found Railway user ID:', railwayUserId)
+        return railwayUserId
+      }
+      
+      console.log('No Railway user found for Supabase user:', supabaseUserId)
+      return null
+    } catch (error) {
+      console.error('Error getting Railway user ID from Supabase:', error)
+      return null
+    }
+  }
+
+  // Get employees for current user by Railway user ID (most secure and efficient)
+  static async getEmployeesByUserId(userId: number): Promise<any[]> {
+    try {
+      console.log('Getting employees for Railway user_id:', userId)
+      
+      // Single query that gets employees for the user's member
+      // This is the most secure and efficient approach
+      const query = `
+        WITH user_member AS (
+          SELECT 
+            u.id as user_id,
+            u.email,
+            u.user_type,
+            COALESCE(c.member_id, a.member_id) as member_id
+          FROM users u
+          LEFT JOIN clients c ON u.id = c.user_id
+          LEFT JOIN agents a ON u.id = a.user_id
+          WHERE u.id = $1
+        )
+        SELECT
+          u.id, u.email, u.user_type, pi.first_name, pi.middle_name, pi.last_name, pi.nickname,
+          pi.profile_picture, pi.phone, pi.birthday, pi.city, pi.address, pi.gender,
+          ji.employee_id, ji.job_title, ji.shift_period, ji.shift_schedule, ji.shift_time,
+          ji.work_setup, ji.employment_status, ji.hire_type, ji.staff_source, ji.start_date,
+          ji.exit_date, ji.work_email, d.name as department_name, d.description as department_description
+        FROM users u
+        INNER JOIN agents a ON u.id = a.user_id
+        LEFT JOIN personal_info pi ON u.id = pi.user_id
+        LEFT JOIN job_info ji ON a.user_id = ji.agent_user_id
+        LEFT JOIN departments d ON a.department_id = d.id
+        WHERE a.member_id = (SELECT member_id FROM user_member)
+        AND u.user_type = 'Agent'
+        ORDER BY COALESCE(pi.last_name, '') || COALESCE(pi.first_name, '') || u.email
+      `
+      
+      const result = await pool.query(query, [userId])
+      console.log('Total employees found:', result.rows.length)
+      return result.rows
+    } catch (error) {
+      console.error('Error fetching employees by user ID:', error)
+      return []
+    }
+  }
+
+  // Get employees for current user by email (optimized - single query)
+  static async getEmployeesByEmail(email: string): Promise<any[]> {
+    try {
+      console.log('Getting employees for email:', email)
+      
+      // Single query that gets employees for the user's member
+      // This is more secure than getUserByEmail + getEmployeesForCurrentUser
+      const query = `
+        WITH user_member AS (
+          SELECT 
+            u.id as user_id,
+            u.email,
+            u.user_type,
+            COALESCE(c.member_id, a.member_id) as member_id
+          FROM users u
+          LEFT JOIN clients c ON u.id = c.user_id
+          LEFT JOIN agents a ON u.id = a.user_id
+          WHERE u.email = $1
+        )
+        SELECT
+          u.id, u.email, u.user_type, pi.first_name, pi.middle_name, pi.last_name, pi.nickname,
+          pi.profile_picture, pi.phone, pi.birthday, pi.city, pi.address, pi.gender,
+          ji.employee_id, ji.job_title, ji.shift_period, ji.shift_schedule, ji.shift_time,
+          ji.work_setup, ji.employment_status, ji.hire_type, ji.staff_source, ji.start_date,
+          ji.exit_date, ji.work_email, d.name as department_name, d.description as department_description
+        FROM users u
+        INNER JOIN agents a ON u.id = a.user_id
+        LEFT JOIN personal_info pi ON u.id = pi.user_id
+        LEFT JOIN job_info ji ON a.user_id = ji.agent_user_id
+        LEFT JOIN departments d ON a.department_id = d.id
+        WHERE a.member_id = (SELECT member_id FROM user_member)
+        AND u.user_type = 'Agent'
+        ORDER BY COALESCE(pi.last_name, '') || COALESCE(pi.first_name, '') || u.email
+      `
+      
+      const result = await pool.query(query, [email])
+      console.log('Total employees found:', result.rows.length)
+      return result.rows
+    } catch (error) {
+      console.error('Error fetching employees by email:', error)
       return []
     }
   }

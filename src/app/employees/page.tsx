@@ -166,7 +166,7 @@ export default function EmployeesPage() {
       try {
         setLoading(true)
         setError(null)
-        const data = await RailwayService.getEmployees(user.email)
+        const data = await RailwayService.getEmployees()
         setEmployees(data)
       } catch (err) {
         console.error('Failed to fetch employees:', err)

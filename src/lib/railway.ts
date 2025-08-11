@@ -46,6 +46,7 @@ export interface Employee {
   staff_source?: string
   start_date?: string
   exit_date?: string
+  work_email?: string
   department_name?: string
   department_description?: string
 }
@@ -91,10 +92,11 @@ export class RailwayService {
     }
   }
 
-  // Get employees
-  static async getEmployees(email: string): Promise<Employee[]> {
+  // Get employees (session-based)
+  static async getEmployees(): Promise<Employee[]> {
     try {
-      const response = await fetch(`/api/employees?email=${encodeURIComponent(email)}`)
+      const { authenticatedFetch } = await import('@/lib/auth-utils')
+      const response = await authenticatedFetch('/api/employees')
       const data = await response.json()
       
       if (response.ok) {
@@ -103,6 +105,23 @@ export class RailwayService {
       return []
     } catch (error) {
       console.error('Error fetching employees:', error)
+      return []
+    }
+  }
+
+  // Get break sessions (session-based)
+  static async getBreakSessions(): Promise<any[]> {
+    try {
+      const { authenticatedFetch } = await import('@/lib/auth-utils')
+      const response = await authenticatedFetch('/api/breaks')
+      const data = await response.json()
+      
+      if (response.ok) {
+        return data.breakSessions || []
+      }
+      return []
+    } catch (error) {
+      console.error('Error fetching break sessions:', error)
       return []
     }
   }

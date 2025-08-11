@@ -46,7 +46,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 // Settings Popover Component
 const SettingsPopover = () => {
-  const [theme, setTheme] = React.useState<'light' | 'dark'>('light')
+  const [theme, setTheme] = React.useState<'light' | 'dark'>('dark')
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
@@ -58,12 +58,29 @@ const SettingsPopover = () => {
     } else {
       document.documentElement.classList.remove('dark')
     }
+    
+    // Save theme preference
+    localStorage.setItem('theme', newTheme)
   }
 
   // Initialize theme on mount
   React.useEffect(() => {
-    const isDark = document.documentElement.classList.contains('dark')
-    setTheme(isDark ? 'dark' : 'light')
+    // Check if there's a saved theme preference
+    const savedTheme = localStorage.getItem('theme')
+    
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      setTheme(savedTheme)
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    } else {
+      // Default to dark mode if no preference is saved
+      setTheme('dark')
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+    }
   }, [])
 
   return (

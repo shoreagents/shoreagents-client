@@ -3,26 +3,36 @@ import { RailwayServerService } from '@/lib/railway-server'
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const email = searchParams.get('email')
+    // Get Bearer token from Authorization header
+    const authHeader = request.headers.get('authorization')
+    const token = authHeader?.replace('Bearer ', '')
     
-    console.log('Employees API called with email:', email)
+    console.log('Employees API called with token:', token ? 'present' : 'missing')
     
-    if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: 400 })
+    if (!token) {
+      return NextResponse.json({ error: 'Authorization token required' }, { status: 401 })
     }
 
-    // Get user data to find their member_id
-    const user = await RailwayServerService.getUserByEmail(email)
+    // Validate token and get user
+    const { supabase } = await import('@/lib/supabase')
+    const { data: { user }, error } = await supabase.auth.getUser(token)
     
-    console.log('Found user:', user?.id, user?.email, user?.user_type)
-    
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    if (error || !user) {
+      console.error('Token validation failed:', error)
+      return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
     }
 
-    // Get employees for this user's member
-    const employees = await RailwayServerService.getEmployeesForCurrentUser(user.id)
+    console.log('Found user:', user.id, user.email, user.user_metadata)
+    
+    // Get Railway user ID directly from Supabase user ID (most efficient)
+    const railwayUserId = await RailwayServerService.getRailwayUserIdFromSupabase(user.id)
+    
+    if (!railwayUserId) {
+      return NextResponse.json({ error: 'User not found in database' }, { status: 404 })
+    }
+    
+    // Get employees using Railway user ID (most secure)
+    const employees = await RailwayServerService.getEmployeesByUserId(railwayUserId)
     
     console.log('Returning employees:', employees.length)
     
@@ -38,22 +48,22 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const email = searchParams.get('email')
-    
-    if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: 400 })
-    }
-
-    // Get user data
-    const user = await RailwayServerService.getUserByEmail(email)
+    // Get authenticated user from session/token
+    const user = request.headers.get('x-user-id')
     
     if (!user) {
+      return NextResponse.json({ error: 'User not authenticated' }, { status: 401 })
+    }
+
+    // Get user data to check permissions
+    const userData = await RailwayServerService.getUserByEmail(user)
+    
+    if (!userData) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
     // Check if user is a client (read-only access)
-    if (user.user_type === 'Client') {
+    if (userData.user_type === 'Client') {
       return NextResponse.json({ 
         error: 'Access denied. Clients can only view employees.' 
       }, { status: 403 })

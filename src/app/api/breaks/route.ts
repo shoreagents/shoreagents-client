@@ -3,26 +3,36 @@ import { RailwayServerService } from '@/lib/railway-server'
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const email = searchParams.get('email')
+    // Get Bearer token from Authorization header
+    const authHeader = request.headers.get('authorization')
+    const token = authHeader?.replace('Bearer ', '')
     
-    console.log('Breaks API called with email:', email)
+    console.log('Breaks API called with token:', token ? 'present' : 'missing')
     
-    if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: 400 })
+    if (!token) {
+      return NextResponse.json({ error: 'Authorization token required' }, { status: 401 })
     }
 
-    // Get user data to find their user_id
-    const user = await RailwayServerService.getUserByEmail(email)
+    // Validate token and get user
+    const { supabase } = await import('@/lib/supabase')
+    const { data: { user }, error } = await supabase.auth.getUser(token)
     
-    console.log('Found user:', user?.id, user?.email, user?.user_type)
+    if (error || !user) {
+      console.error('Token validation failed:', error)
+      return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
+    }
+
+    console.log('Found user:', user.id, user.email, user.user_metadata)
     
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    // Get user data from Railway database
+    const railwayUser = await RailwayServerService.getUserByEmail(user.email!)
+    
+    if (!railwayUser) {
+      return NextResponse.json({ error: 'User not found in database' }, { status: 404 })
     }
 
     // Get break sessions for this user's member
-    const breakSessions = await RailwayServerService.getBreakSessionsForCurrentUser(user.id)
+    const breakSessions = await RailwayServerService.getBreakSessionsForCurrentUser(railwayUser.id)
     
     console.log('Returning break sessions:', breakSessions.length)
     
